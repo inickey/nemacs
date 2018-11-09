@@ -1,0 +1,4 @@
+* %^{State|TODO|NEXT|WAIT|NOTE|DONE} %^{Title}
+  %a
+  %T
+  %i
