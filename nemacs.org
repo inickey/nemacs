@@ -347,12 +347,14 @@
     #+begin_src emacs-lisp
       (setq n-org-files-dir "~/Org"
             n-org-main      (f-join n-org-files-dir "main.org")
+            n-org-movies    (f-join n-org-files-dir "movies.org")
             n-org-logbook   (f-join n-org-files-dir "logbook.org.gpg"))
     #+end_src
 
     Шаблоны, которые я использую:
     - =i= inbox   Попадает в Inbox для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
     - =t= todo    Попадает в Inbox в виде TODO-заметки для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
+    - =m= movie   Сохраняет фильм для последующего просмотра. При вводе спрашивает название, жанр, год, ссылку на описание.
     - =l= logbook Используется для фиксации различных событий и мыслей в шифрованном файле, отдаленно напоминает дневник, только не дневник.
 
     #+begin_src emacs-lisp
@@ -367,6 +369,9 @@
               ("t" "Todo inbox entry"
                entry  (file+headline ,n-org-main "Inbox")
                (file ,(f-join n-capture-templates-dir "inbox-todo.org")))
+              ("m" "Movie to watch"
+               entry  (file+headline ,n-org-movies "All movies")
+               (file ,(f-join n-capture-templates-dir "movie.org")))
               ("l" "Logbook entry"
                entry  (file+olp+datetree ,n-org-logbook)
                (file ,(f-join n-capture-templates-dir "logbook.org")))))
