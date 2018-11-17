@@ -39,11 +39,12 @@
    
 ** Настройка репозиториев и use-package
 
-   Используем =Melpa=, =Melpa Stable= и =Org=.
+   Используем =Elpa=, =Melpa=, =Melpa Stable= и =Org=.
 
    #+begin_src emacs-lisp
      (setq package-archives
-           '(("melpa"        . "https://melpa.org/packages/")
+           '(("gnu"          . "https://elpa.gnu.org/packages/")
+             ("melpa"        . "https://melpa.org/packages/")
              ("melpa-stable" . "https://stable.melpa.org/packages/")
              ("org"          . "https://orgmode.org/elpa/")))
    #+end_src
@@ -131,6 +132,16 @@
    #+begin_src emacs-lisp
      (menu-bar-mode -1)
      (tool-bar-mode -1)
+   #+end_src
+   
+** Системный буфер обмена
+
+   Поскольку я использую терминальную версию Emacs, kill-ring редактора и системный clipboard ничего друг о друге не знают. Пакет =xclip= решает эту проблему с помощью одноименной утилиты для командной строки.
+
+   #+begin_src emacs-lisp
+     (use-package xclip
+       :ensure    t
+       :config    (xclip-mode 1))
    #+end_src
    
 ** Цветовая тема
