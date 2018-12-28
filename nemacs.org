@@ -356,14 +356,20 @@
 
     #+begin_src emacs-lisp
       (setq n-org-files-dir "~/Org"
-            n-org-main      (f-join n-org-files-dir "main.org")
+            n-org-inbox     (f-join n-org-files-dir "inbox.org")
+            n-org-calendar  (f-join n-org-files-dir "calendar.org")
+            n-org-projects  (f-join n-org-files-dir "projects.org")
             n-org-movies    (f-join n-org-files-dir "movies.org")
             n-org-logbook   (f-join n-org-files-dir "logbook.org.gpg"))
     #+end_src
 
+    #+begin_src emacs-lisp
+      (setq org-default-notes-file n-org-inbox)
+    #+end_src
+
     Шаблоны, которые я использую:
-    - =i= inbox   Попадает в Inbox для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
-    - =t= todo    Попадает в Inbox в виде TODO-заметки для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
+    - =i= inbox   Попадает во Входящие для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
+    - =t= todo    Попадает во Входящие в виде TODO-заметки для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
     - =m= movie   Сохраняет фильм для последующего просмотра. При вводе спрашивает название, жанр, год, ссылку на описание.
     - =l= logbook Используется для фиксации различных событий и мыслей в шифрованном файле, отдаленно напоминает дневник, только не дневник.
 
@@ -374,10 +380,10 @@
     #+begin_src emacs-lisp
       (setq org-capture-templates
             `(("i" "Plain inbox entry"
-               entry  (file+headline ,n-org-main "Inbox")
+               entry  (file+headline ,n-org-inbox "Входящие")
                (file ,(f-join n-capture-templates-dir "inbox-plain.org")))
               ("t" "Todo inbox entry"
-               entry  (file+headline ,n-org-main "Inbox")
+               entry  (file+headline ,n-org-inbox "Входящие")
                (file ,(f-join n-capture-templates-dir "inbox-todo.org")))
               ("m" "Movie to watch"
                entry  (file+headline ,n-org-movies "All movies")
@@ -385,6 +391,38 @@
               ("l" "Logbook entry"
                entry  (file+olp+datetree ,n-org-logbook)
                (file ,(f-join n-capture-templates-dir "logbook.org")))))
+    #+end_src
+
+*** Настройка =org-refile=
+
+    После того, как заметки попали в Inbox, их периодически нужно разбирать, раскладывая по соответствующим разделам и файлам. Для этого служит механизм =org-refile=. Настроим целевые файлы, в которые возможен перенос. Сам Inbox по понятным причинам в этот список не входит.
+
+    #+begin_src emacs-lisp
+      (setq org-refile-targets `((,n-org-calendar . (:maxlevel . 2))
+                                 (,n-org-projects . (:maxlevel . 3))))
+    #+end_src
+
+*** Настройка =org-agenda=
+
+    Когда в заметках наведен порядок, хотелось бы в удобоваримом виде получить список дел на день, неделю или без привязки к календарю. Для этого есть =org-agenda=. Указываем файлы, из которых нужно собирать заметки и назначаем клавиши вызова.
+
+    #+begin_src emacs-lisp
+      (setq org-agenda-files (list n-org-inbox n-org-calendar n-org-projects))
+    #+end_src
+
+    #+begin_src emacs-lisp
+      (global-set-key (kbd "C-c a") #'org-agenda)
+    #+end_src
+
+*** Настройка =org-archive=
+
+    Удаление выполненных или отмененных дел - плохая практика т. к. иногда (не так уж редко) бывает нужно уточнить, что именно было сделано, когда, если отменено - то почему и т. д. Короче говоря, айтишники тяжело расстаются с метаинформацией. Поэтому вместо удаления лучше использовать =org-archive=, который позволяет перемещать ставшие ненужными заметки или деревья в отдельный файл, добавляя к ним информацию о дате архивирования, предыдущем местонахождении и др.
+
+    Чтобы файл не мозолил глаза, я использую скрытый файл =.archive.org=, а заметки в нем раскладываются по разделам с именами файлов, из которых они были перемещены.
+
+    #+begin_src emacs-lisp
+      (setq org-archive-location (f-join n-org-files-dir
+                                         ".archive.org::** Из файла %s"))
     #+end_src
 
 ** Почта (=Gnus=)
