@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: head
+# key: head
+# --
+#+TITLE:  ${1:$$(capitalize (s-replace "-" " " (f-base (or buffer-file-name "Title"))))}
+#+AUTHOR: ${2:$$(format "%s <%s>" user-full-name user-mail-address)}
+#+DATE:   ${3:$$(format-time-string (car org-time-stamp-formats))}
+
+$0
