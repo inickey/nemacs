@@ -199,6 +199,25 @@
 
      (global-set-key (kbd "C-w") #'n-kill-region-or-backward-word)
    #+end_src
+
+** Выравнивание значений при присваивании (по символу равенства)
+
+   Я стараюсь держать символы равенства выровненными там, где это не нарушает стандарта кодирования языка или проекта. Пример ниже
+
+   #+begin_example
+     foo    = "bar";
+     hello  = "world";
+     foobar = "baz";
+   #+end_example
+
+   #+begin_src emacs-lisp
+     (defun align-to-equals (begin end)
+       "Align region to equal signs"
+       (interactive "r")
+       (align-regexp begin end "\\(\\s-*\\)=" 1 1 ))
+
+     (global-set-key (kbd "M-n M-=") #'align-to-equals)
+   #+end_src
   
 ** Отключение сворачивания по =C-z=
 
