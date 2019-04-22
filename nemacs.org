@@ -229,6 +229,17 @@
 
      (global-set-key (kbd "M-n M-=") #'align-to-equals)
    #+end_src
+
+** Editorconfig
+
+   Используем [[https://editorconfig.org/][editorconfig]] для управления кодировкой, размером и стилем отступов и т. д.
+
+   #+begin_src emacs-lisp
+     (use-package editorconfig
+       :ensure    t
+       :config
+       (editorconfig-mode 1))
+   #+end_src
   
 ** Отключение сворачивания по =C-z=
 
