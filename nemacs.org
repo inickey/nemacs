@@ -421,16 +421,19 @@
         (let ((default-directory path))
           (shell-command (format "meson %s" meson-build-dir))))
 
+      (defun meson-project-build-dir (path)
+        "Return project build dir. Configuring project with meson if it not exists"
+        (when-let (project-root (meson-project-root path))
+          (let ((project-build-dir (f-join project-root meson-build-dir)))
+            (unless (f-exists-p project-build-dir)
+              (and meson-auto-config (meson-configure-project project-root)))
+            (when (f-exists-p project-build-dir) project-build-dir))))
+
       (defun meson-set-compile-command ()
         "Sets buffer-local `compile-command' variable"
-        (when-let (project-root (meson-project-root (buffer-file-name)))
-          (unless (f-exists-p (f-join project-root meson-build-dir))
-            (and meson-auto-config
-                 (meson-configure-project project-root)))
-          (when (f-exists-p (f-join project-root meson-build-dir))
-            (set (make-local-variable 'compile-command)
-                 (format "ninja -C %s"
-                         (f-join project-root meson-build-dir))))))
+        (when-let (project-build-dir (meson-project-build-dir (buffer-file-name)))
+          (set (make-local-variable 'compile-command)
+               (format "ninja -C %s" project-build-dir))))
 
       (defun meson-set-project-bin (&optional path)
         "Ask user for current project binary path and store it in `meson--project-bin'"
@@ -449,6 +452,12 @@
         (when-let ((project-bin (meson-project-bin (buffer-file-name))))
           (shell-command project-bin)))
 
+      (defun meson-project-run-tests ()
+        "Run tests with ninja"
+        (interactive)
+        (when-let (project-build-dir (meson-project-build-dir (buffer-file-name)))
+          (shell-command (format "ninja -C %s test" project-build-dir))))
+
       (defun meson-project-gdb ()
         "Run project binary over GDB debugger"
         (interactive)
@@ -459,16 +468,20 @@
                                           (format "gdb -i=mi %s" project-bin-rel))))
           (gdb gdb-cmd)))
 
+      (defun vala-set-meson-keys ()
+        "Hook setting buffer-local Vala and Meson specific keybindings"
+        (local-set-key (kbd "C-c C-c") #'compile)
+        (local-set-key (kbd "C-c C-r") #'meson-project-run)
+        (local-set-key (kbd "C-c C-t") #'meson-project-run-tests)
+        (local-set-key (kbd "C-c C-g") #'meson-project-gdb)
+        (local-set-key (kbd "C-c b")   #'meson-set-project-bin))
+
       (use-package meson-mode
         :ensure    t
         :after     (vala-mode)
         :init
         (add-hook 'vala-mode-hook #'meson-set-compile-command)
-        (add-hook 'vala-mode-hook (lambda ()
-                                    (local-set-key (kbd "C-c C-c") #'compile)
-                                    (local-set-key (kbd "C-c C-r") #'meson-project-run)
-                                    (local-set-key (kbd "C-c C-g") #'meson-project-gdb)
-                                    (local-set-key (kbd "C-c b")   #'meson-set-project-bin))))
+        (add-hook 'vala-mode-hook #'vala-set-meson-keys))
     #+end_src
     
 *** =YAML=
