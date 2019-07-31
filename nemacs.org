@@ -337,6 +337,21 @@
        :bind      ("M-n M-w" . #'writeroom-mode))
    #+end_src
 
+** =Neotree= дерево каталогов а-ля Sublime, VSCode, etc
+
+   Вообще говоря, я как-то привык жить без него, но почему бы и нет?
+
+   #+begin_src emacs-lisp
+     (use-package neotree
+       :ensure    t
+       :bind      ("M-n M-n" . #'neotree-toggle))
+
+     (use-package all-the-icons
+       :ensure    t
+       :config
+       (setq neo-theme 'icons))
+   #+end_src
+   
 ** Мажорные режимы для различных языков программирования и разметки
 
    За пару месяцев их набирается полтора-два десятка, так что буду добавлять по мере использования.
