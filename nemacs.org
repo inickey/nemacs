@@ -155,17 +155,6 @@
        :config    (xclip-mode 1))
    #+end_src
    
-** Цветовая тема
-
-   Сначала думал, достаточно будет настроить цвета в терминале, но нет... Использую дефолтную темную тему из [[https://github.com/belak/base16-emacs][base16]], ту же, что и [[https://github.com/chriskempson/base16-xresources/tree/master/xresources][в терминале]].
-
-   #+begin_src emacs-lisp
-     (use-package base16-theme
-       :ensure    t
-       :config
-       (load-theme 'base16-default-dark t))
-   #+end_src
-
 ** Украшательство модлайна с =powerline=
 
    Временно добавлю - пока не определился, буду ли его использовать.
