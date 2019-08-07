@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: gpl3
+# key: gpl3
+# contributor: Nikolay Brovko <i@nickey.ru>
+# --
+/**
+ * ${1:`(or (file-name-nondirectory (buffer-file-name)) "One line to give the program's name and a brief idea of what it does")`}
+ * Copyright (C) ${2:`(format-time-string "%Y")`} ${3:`(or user-full-name "Author")`} <${4:`(or user-mail-address "email@example.com")`}>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+$0

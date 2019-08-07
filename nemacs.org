@@ -483,6 +483,30 @@
         (add-hook 'vala-mode-hook #'meson-set-compile-command)
         (add-hook 'vala-mode-hook #'vala-set-meson-keys))
     #+end_src
+
+    Еще неплохо было бы автоматически вставлять GNU/GPL заголовок в каждый файл, если лицензия применима для текущего проекта.
+
+    #+begin_src emacs-lisp
+      (defun n-locate-dominating-file (file name)
+        (when-let (dir (locate-dominating-file file name))
+          (f-join dir name)))
+
+      (defun n-is-gpl-project (path)
+        (when-let (copying-file (or (n-locate-dominating-file path "COPYING")
+                                    (n-locate-dominating-file path "LICENSE")))
+          (with-temp-buffer
+            (insert-file-contents copying-file)
+            (search-forward "GNU GENERAL PUBLIC LICENSE" nil t))))
+
+      (defun insert-gpl-header ()
+        (when-let (file (buffer-file-name))
+          (unless (file-exists-p file)
+            (when-let (snippet (yas-lookup-snippet "gpl3" major-mode t))
+              (yas-minor-mode 1)
+              (yas-expand-snippet snippet)))))
+
+      (add-hook 'vala-mode-hook #'insert-gpl-header t)
+    #+end_src
     
 *** =YAML=
 
