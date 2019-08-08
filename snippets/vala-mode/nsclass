@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: nsclass
+# key: nsclass
+# --
+namespace ${1:Namespace} {
+
+    ${2:public} class ${3:ClassName} ${4:: ${5:GLib.Object} }{
+
+        ${0:}
+
+    }
+
+}
