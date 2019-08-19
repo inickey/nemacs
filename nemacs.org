@@ -500,7 +500,7 @@
 
       (defun insert-gpl-header ()
         (when-let (file (buffer-file-name))
-          (unless (file-exists-p file)
+          (when (and (not (file-exists-p file)) (n-is-gpl-project file))
             (when-let (snippet (yas-lookup-snippet "gpl3" major-mode t))
               (yas-minor-mode 1)
               (yas-expand-snippet snippet)))))
