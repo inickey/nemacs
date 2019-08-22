@@ -558,13 +558,15 @@
 
     #+begin_src emacs-lisp
       (setq n-org-files-dir "~/Org"
-            n-org-organizer (f-join n-org-files-dir "organizer.org")
-            n-org-movies    (f-join n-org-files-dir "movies.org")
+            n-org-inbox     (f-join n-org-files-dir "inbox.org")
+            n-org-projects  (f-join n-org-files-dir "projects.org")
+            n-org-calendar  (f-join n-org-files-dir "calendar.org")
+            n-org-someday   (f-join n-org-files-dir "someday.org")
             n-org-logbook   (f-join n-org-files-dir "logbook.org.gpg"))
     #+end_src
 
     #+begin_src emacs-lisp
-      (setq org-default-notes-file n-org-organizer)
+      (setq org-default-notes-file n-org-inbox)
     #+end_src
 
     Шаблоны, которые я использую:
@@ -580,14 +582,8 @@
     #+begin_src emacs-lisp
       (setq org-capture-templates
             `(("i" "Plain inbox entry"
-               entry  (file+headline ,n-org-organizer "Входящие")
+               entry  (file+headline ,n-org-inbox     "Входящие")
                (file ,(f-join n-capture-templates-dir "inbox-plain.org")))
-              ("t" "Todo inbox entry"
-               entry  (file+headline ,n-org-organizer "Входящие")
-               (file ,(f-join n-capture-templates-dir "inbox-todo.org")))
-              ("m" "Movie to watch"
-               entry  (file+headline ,n-org-movies "All movies")
-               (file ,(f-join n-capture-templates-dir "movie.org")))
               ("l" "Logbook entry"
                entry  (file+olp+datetree ,n-org-logbook)
                (file ,(f-join n-capture-templates-dir "logbook.org")))))
@@ -598,7 +594,9 @@
     После того, как заметки попали в Inbox, их периодически нужно разбирать, раскладывая по соответствующим разделам и файлам. Для этого служит механизм =org-refile=. Настроим целевые файлы, в которые возможен перенос. Сам Inbox по понятным причинам в этот список не входит.
 
     #+begin_src emacs-lisp
-      (setq org-refile-targets `((,n-org-organizer . (:maxlevel . 2))))
+      (setq org-refile-targets `((,n-org-projects . (:maxlevel . 1))
+                                 (,n-org-calendar . (:maxlevel . 1))
+                                 (,n-org-someday  . (:maxlevel . 2))))
     #+end_src
 
 *** Настройка =org-agenda=
@@ -606,7 +604,7 @@
     Когда в заметках наведен порядок, хотелось бы в удобоваримом виде получить список дел на день, неделю или без привязки к календарю. Для этого есть =org-agenda=. Указываем файлы, из которых нужно собирать заметки и назначаем клавиши вызова.
 
     #+begin_src emacs-lisp
-      (setq org-agenda-files (list n-org-organizer))
+      (setq org-agenda-files (list n-org-inbox n-org-projects n-org-calendar))
     #+end_src
 
     #+begin_src emacs-lisp
