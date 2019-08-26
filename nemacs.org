@@ -632,7 +632,8 @@
        :bind      (("M-n M-p" . #'pomidor))
        :config
        (setq pomidor-play-sound-file #'ignore
-             alert-default-style     'libnotify))
+             alert-default-style     'libnotify
+             pomidor-graph-char      10074))
    #+end_src
    
 ** Почта (=Gnus=)
