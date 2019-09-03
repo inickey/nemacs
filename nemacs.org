@@ -216,6 +216,7 @@
    #+begin_src emacs-lisp
      (use-package editorconfig
        :ensure    t
+       :diminish  editorconfig-mode
        :config
        (editorconfig-mode 1))
    #+end_src
@@ -268,6 +269,7 @@
    #+begin_src emacs-lisp
      (use-package yasnippet
        :ensure t
+       :diminish yas-minor-mode
        :config
        (progn
          (add-to-list 'yas-snippet-dirs (f-join n-nemacs-dir "snippets"))
