@@ -339,6 +339,17 @@
        (setq neo-theme 'icons))
    #+end_src
    
+** Проверка орфографии
+
+   =flyspell= встроен в Emacs и использует утилиту aspell. Словари надо установить руками, средствами операционной системы
+
+   #+begin_src emacs-lisp
+     (use-package flyspell
+       :hook ((org-mode-hook . flyspell-mode)
+              (text-mode-hook . flyspell-mode)
+              (markdown-mode-hook . flyspell-mode)))
+   #+end_src
+
 ** Мажорные режимы для различных языков программирования и разметки
 
    За пару месяцев их набирается полтора-два десятка, так что буду добавлять по мере использования.
