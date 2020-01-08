@@ -612,8 +612,6 @@
 
     Шаблоны, которые я использую:
     - =i= inbox   Попадает во Входящие для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
-    - =t= todo    Попадает во Входящие в виде TODO-заметки для последующего разбора, схоже с [[https://ru.wikipedia.org/wiki/Getting_Things_Done][GTD]].
-    - =m= movie   Сохраняет фильм для последующего просмотра. При вводе спрашивает название, жанр, год, ссылку на описание.
     - =l= logbook Используется для фиксации различных событий и мыслей в шифрованном файле, отдаленно напоминает дневник, только не дневник.
 
     #+begin_src emacs-lisp
@@ -635,8 +633,8 @@
     После того, как заметки попали в Inbox, их периодически нужно разбирать, раскладывая по соответствующим разделам и файлам. Для этого служит механизм =org-refile=. Настроим целевые файлы, в которые возможен перенос. Сам Inbox по понятным причинам в этот список не входит.
 
     #+begin_src emacs-lisp
-      (setq org-refile-targets `((,n-org-projects . (:maxlevel . 1))
-                                 (,n-org-calendar . (:maxlevel . 1))
+      (setq org-refile-targets `((,n-org-projects . (:maxlevel . 2))
+                                 (,n-org-calendar . (:maxlevel . 2))
                                  (,n-org-someday  . (:maxlevel . 2))))
     #+end_src
 
