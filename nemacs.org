@@ -296,6 +296,15 @@
          (require 'smartparens-config)
          (smartparens-global-mode 1)))
    #+end_src
+
+** Автокомплит с =company=
+
+    Сам по себе он мне без надобности, пользуюсь только с LSP, и то не всегда.
+
+    #+begin_src emacs-lisp
+      (use-package company
+        :ensure    t)
+    #+end_src
    
 ** Управление git-репозиторием с =Magit=
 
@@ -344,9 +353,27 @@
               (markdown-mode-hook . flyspell-mode)))
    #+end_src
 
-** Мажорные режимы для различных языков программирования и разметки
+** Режимы для различных языков программирования и разметки
 
    За пару месяцев их набирается полтора-два десятка, так что буду добавлять по мере использования.
+
+*** =LSP=
+
+    Language Server Protocol. Позволяет подтащить специфичные для языка фичи без реализации их средствами самого Emacs.
+
+    #+begin_src emacs-lisp
+      (use-package lsp-mode
+        :ensure    t)
+
+      (use-package lsp-ui
+        :ensure    t)
+
+      (use-package company-lsp
+        :ensure    t)
+
+      (use-package lsp-treemacs
+        :ensure    t)
+    #+end_src
    
 *** =Лиспы=
 
