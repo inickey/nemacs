@@ -323,19 +323,14 @@
        :bind      ("M-n M-w" . #'writeroom-mode))
    #+end_src
 
-** =Neotree= дерево каталогов а-ля Sublime, VSCode, etc
+** =Treemacs= дерево каталогов а-ля Sublime, VSCode, etc
 
    Вообще говоря, я как-то привык жить без него, но почему бы и нет?
 
    #+begin_src emacs-lisp
-     (use-package neotree
+     (use-package treemacs
        :ensure    t
-       :bind      ("M-n M-n" . #'neotree-toggle))
-
-     (use-package all-the-icons
-       :ensure    t
-       :config
-       (setq neo-theme 'icons))
+       :bind      ("M-n M-n" . #'treemacs))
    #+end_src
    
 ** Проверка орфографии
