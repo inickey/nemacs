@@ -305,6 +305,14 @@
       (use-package company
         :ensure    t)
     #+end_src
+
+    Для красивых скриншотов добавлю еще иконки в буфер автокомплита.
+
+    #+begin_src emacs-lisp
+      (use-package company-box
+        :ensure    t
+        :hook      (company-mode . company-box-mode))
+    #+end_src
    
 ** Управление git-репозиторием с =Magit=
 
