@@ -128,7 +128,7 @@
    Все таки периодически запускаю emacs в GUI, поэтому нужно установить фонт.
 
    #+begin_src emacs-lisp
-     (let ((default-font "JetBrains Mono 13"))
+     (let ((default-font "JetBrains Mono Light 13"))
        (set-default-font default-font)
        (add-to-list 'default-frame-alist `(font . ,default-font)))
    #+end_src
