@@ -568,13 +568,21 @@
         "Run project binary"
         (interactive)
         (when-let ((project-bin (meson-project-bin (buffer-file-name))))
-          (shell-command project-bin)))
+          (switch-to-buffer "*Command Output*")
+          (async-shell-command project-bin (current-buffer) (current-buffer))
+          (read-only-mode 1)
+          (local-set-key (kbd "q") (lambda () (interactive) (kill-buffer (current-buffer))))))
 
       (defun meson-project-run-tests ()
         "Run tests with ninja"
         (interactive)
         (when-let (project-build-dir (meson-project-build-dir (buffer-file-name)))
-          (shell-command (format "ninja -C %s test" project-build-dir))))
+          (switch-to-buffer "*Tests Output*")
+          (async-shell-command (format "ninja -C %s test" project-build-dir)
+                               (current-buffer)
+                               (current-buffer))
+          (read-only-mode 1)
+          (local-set-key (kbd "q") (lambda () (interactive) (kill-buffer (current-buffer))))))
 
       (defun meson-project-gdb ()
         "Run project binary over GDB debugger"
@@ -586,7 +594,7 @@
                                           (format "gdb -i=mi %s" project-bin-rel))))
           (gdb gdb-cmd)))
 
-      (defun vala-set-meson-keys ()
+      (defun meson-set-build-keys ()
         "Hook setting buffer-local Vala and Meson specific keybindings"
         (local-set-key (kbd "C-c C-c") #'compile)
         (local-set-key (kbd "C-c C-r") #'meson-project-run)
@@ -596,10 +604,10 @@
 
       (use-package meson-mode
         :ensure    t
-        :after     (vala-mode)
-        :init
-        (add-hook 'vala-mode-hook #'meson-set-compile-command)
-        (add-hook 'vala-mode-hook #'vala-set-meson-keys))
+        :hook      (meson-mode . meson-set-compile-command)
+                   (meson-mode . meson-set-build-keys)
+                   (vala-mode  . meson-set-compile-command)
+                   (vala-mode  . meson-set-build-keys))
     #+end_src
 
     Еще неплохо было бы автоматически вставлять GNU/GPL заголовок в каждый файл, если лицензия применима для текущего проекта.
