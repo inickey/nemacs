@@ -489,10 +489,25 @@
                           :major-modes '(vala-mode)
                           :server-id 'vala-language-server)))
 
+      (defun n-vala-mode-hook ()
+        (setq indent-tabs-mode nil)
+        (setq require-final-newline t)
+        (c-set-style "vala")
+        (add-hook 'before-save-hook #'untabify-buffer t t)
+        (add-hook 'before-save-hook #'delete-trailing-whitespace t t)
+        (add-hook 'before-save-hook #'group-empty-lines t t))
+
       (use-package vala-mode
         :ensure    t
         :hook      (vala-mode . lsp)
+                   (vala-mode . n-vala-mode-hook)
         :config    (lsp-register-vala-backend))
+    #+end_src
+
+    У меня нет времени заняться и оживить vala-mode самостоятельно, а авторы на него немного забили. По c-style самым близким к тому, что нужно, оказался psr2 от php-mode, его и используем.
+
+    #+begin_src emacs-lisp
+      (c-add-style "vala" (list (if (assoc "psr2" c-style-alist) "psr2" "linux")))
     #+end_src
 
     Т. к. в Vala принято использовать [[https://mesonbuild.com/][Meson]] для сборки проекта, подключение соответствующего режима положу сюда.
