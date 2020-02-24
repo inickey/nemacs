@@ -534,101 +534,26 @@
     Т. к. в Vala принято использовать [[https://mesonbuild.com/][Meson]] для сборки проекта, подключение соответствующего режима положу сюда.
 
     #+begin_src emacs-lisp
-      (defvar meson--project-bin nil
-        "Keep last project binary to run with GDB")
+      (use-package meson-mode
+        :ensure    t)
 
-      (defvar meson-build-dir "build"
-        "Directory which will be an argument for meson and ninja commands")
+      (use-package meson-build
+        :ensure    t
+        :straight  (meson-build :type git
+                                :repo "https://git.nickey.ru/nickey/meson-build.el"))
 
-      (defvar meson-auto-config t
-        "If build directory isn't exists, it'll be created automatically")
-
-      (defun meson-project-root (path)
-        "Return the most distant directory including meson.build file"
-        (when-let ((meson-file (locate-dominating-file path "meson.build")))
-          (if (locate-dominating-file (f-parent meson-file) "meson.build")
-              (meson-project-root (f-parent meson-file))
-            meson-file)))
-
-      (defun meson-same-project-p (path1 path2)
-        "Check two paths are in same meson project"
-        (and path1 path2
-             (string-equal (meson-project-root path1) (meson-project-root path2))))
-
-      (defun meson-configure-project (path)
-        "Create meson build directory which will be named as `meson-build-dir' value"
-        (let ((default-directory path))
-          (shell-command (format "meson %s" meson-build-dir))))
-
-      (defun meson-project-build-dir (path)
-        "Return project build dir. Configuring project with meson if it not exists"
-        (when-let (project-root (meson-project-root path))
-          (let ((project-build-dir (f-join project-root meson-build-dir)))
-            (unless (f-exists-p project-build-dir)
-              (and meson-auto-config (meson-configure-project project-root)))
-            (when (f-exists-p project-build-dir) project-build-dir))))
-
-      (defun meson-set-compile-command ()
-        "Sets buffer-local `compile-command' variable"
-        (when-let (project-build-dir (meson-project-build-dir (buffer-file-name)))
-          (set (make-local-variable 'compile-command)
-               (format "ninja -C %s" project-build-dir))))
-
-      (defun meson-set-project-bin (&optional path)
-        "Ask user for current project binary path and store it in `meson--project-bin'"
-        (interactive "FBinary path: ")
-        (setq meson--project-bin path))
-
-      (defun meson-project-bin (path)
-        "Return binary file for current project or ask it from user"
-        (if (meson-same-project-p meson--project-bin path)
-            meson--project-bin
-          (call-interactively #'meson-set-project-bin)))
-
-      (defun meson-project-run ()
-        "Run project binary"
-        (interactive)
-        (when-let ((project-bin (meson-project-bin (buffer-file-name))))
-          (switch-to-buffer "*Command Output*")
-          (async-shell-command project-bin (current-buffer) (current-buffer))
-          (read-only-mode 1)
-          (local-set-key (kbd "q") (lambda () (interactive) (kill-buffer (current-buffer))))))
-
-      (defun meson-project-run-tests ()
-        "Run tests with ninja"
-        (interactive)
-        (when-let (project-build-dir (meson-project-build-dir (buffer-file-name)))
-          (switch-to-buffer "*Tests Output*")
-          (async-shell-command (format "ninja -C %s test" project-build-dir)
-                               (current-buffer)
-                               (current-buffer))
-          (read-only-mode 1)
-          (local-set-key (kbd "q") (lambda () (interactive) (kill-buffer (current-buffer))))))
-
-      (defun meson-project-gdb ()
-        "Run project binary over GDB debugger"
-        (interactive)
-        (when-let* ((project-bin (meson-project-bin (buffer-file-name)))
-                    (project-bin-rel (f-relative project-bin
-                                                 (f-dirname (buffer-file-name))))
-                    (gdb-cmd (read-string "Run gdb (like this): "
-                                          (format "gdb -i=mi %s" project-bin-rel))))
-          (gdb gdb-cmd)))
-
-      (defun meson-set-build-keys ()
+      (defun meson-build-set-keys ()
         "Hook setting buffer-local Vala and Meson specific keybindings"
         (local-set-key (kbd "C-c C-c") #'compile)
-        (local-set-key (kbd "C-c C-r") #'meson-project-run)
-        (local-set-key (kbd "C-c C-t") #'meson-project-run-tests)
-        (local-set-key (kbd "C-c C-g") #'meson-project-gdb)
-        (local-set-key (kbd "C-c b")   #'meson-set-project-bin))
+        (local-set-key (kbd "C-c C-r") #'meson-build-run-project)
+        (local-set-key (kbd "C-c C-t") #'meson-build-run-tests)
+        (local-set-key (kbd "C-c C-g") #'meson-build-run-gdb)
+        (local-set-key (kbd "C-c b")   #'meson-build-set-project-bin))
 
-      (use-package meson-mode
-        :ensure    t
-        :hook      (meson-mode . meson-set-compile-command)
-                   (meson-mode . meson-set-build-keys)
-                   (vala-mode  . meson-set-compile-command)
-                   (vala-mode  . meson-set-build-keys))
+      (add-hook 'meson-mode-hook #'meson-build-set-compile-command)
+      (add-hook 'meson-mode-hook #'meson-build-set-keys)
+      (add-hook 'vala-mode-hook  #'meson-build-set-compile-command)
+      (add-hook 'vala-mode-hook  #'meson-build-set-keys)
     #+end_src
 
     Еще неплохо было бы автоматически вставлять GNU/GPL заголовок в каждый файл, если лицензия применима для текущего проекта.
