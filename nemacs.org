@@ -37,6 +37,27 @@
            user-mail-address "i@nickey.ru")
    #+end_src
    
+** Установка пакетного менеджера [[https://github.com/raxod502/straight.el][straight.el]]
+
+   Давно руки чесались его попробовать, а теперь он мне нужен, чтобы подтягивать свои мелкие пакеты из git-репозиториев. Для этих целей необязательно было выбирать именно его, но а почему нет, собственно?
+
+   Код установки - копипаста из README проекта.
+
+   #+begin_src emacs-lisp
+     (defvar bootstrap-version)
+     (let ((bootstrap-file
+            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+           (bootstrap-version 5))
+       (unless (file-exists-p bootstrap-file)
+         (with-current-buffer
+             (url-retrieve-synchronously
+              "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+              'silent 'inhibit-cookies)
+           (goto-char (point-max))
+           (eval-print-last-sexp)))
+       (load bootstrap-file nil 'nomessage))
+   #+end_src
+
 ** Настройка репозиториев и use-package
 
    Используем =Elpa=, =Melpa=, =Melpa Stable= и =Org=.
