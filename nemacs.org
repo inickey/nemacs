@@ -150,7 +150,9 @@
 
    #+begin_src emacs-lisp
      (let ((default-font "JetBrains Mono Light 13"))
-       (set-default-font default-font)
+       (if (functionp #'set-default-font)
+           (set-default-font default-font)
+         (set-frame-font default-font))
        (add-to-list 'default-frame-alist `(font . ,default-font)))
    #+end_src
 
