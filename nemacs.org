@@ -622,6 +622,13 @@
       (add-hook 'org-mode-hook 'visual-line-mode)
     #+end_src
 
+    Подключаем полезности из contrib.
+
+    #+begin_src emacs-lisp
+      (require 'org-checklist)
+      (require 'org-habit)
+    #+end_src
+
 *** Настройка шаблонов для =org-capture=
 
     =org-capture= это крайне полезная штука, позволяющая быстро делать заметки и комментарии из любого места, сохраняя их в указанных местах. В моем случае org-capture вызывается командой =C-c c=.
@@ -635,6 +642,7 @@
     #+begin_src emacs-lisp
       (setq n-org-files-dir "~/Org"
             n-org-inbox     (f-join n-org-files-dir "inbox.org")
+            n-org-daily     (f-join n-org-files-dir "daily-plan.org")
             n-org-projects  (f-join n-org-files-dir "projects.org")
             n-org-calendar  (f-join n-org-files-dir "calendar.org")
             n-org-someday   (f-join n-org-files-dir "someday.org")
@@ -658,8 +666,10 @@
             `(("i" "Plain inbox entry"
                entry  (file+headline ,n-org-inbox     "Входящие")
                (file ,(f-join n-capture-templates-dir "inbox-plain.org")))
+              ("d" "Daily Review"
+               entry  (file+olp+datetree ,n-org-daily))
               ("l" "Logbook entry"
-               entry  (file+olp+datetree ,n-org-logbook)
+               entry  (file+datetree+prompt ,n-org-logbook)
                (file ,(f-join n-capture-templates-dir "logbook.org")))))
     #+end_src
 
@@ -670,7 +680,8 @@
     #+begin_src emacs-lisp
       (setq org-refile-targets `((,n-org-projects . (:maxlevel . 2))
                                  (,n-org-calendar . (:maxlevel . 2))
-                                 (,n-org-someday  . (:maxlevel . 2))))
+                                 (,n-org-someday  . (:maxlevel . 2))
+                                 (,n-org-daily    . (:maxlevel . 3))))
     #+end_src
 
 *** Настройка =org-agenda=
@@ -678,7 +689,7 @@
     Когда в заметках наведен порядок, хотелось бы в удобоваримом виде получить список дел на день, неделю или без привязки к календарю. Для этого есть =org-agenda=. Указываем файлы, из которых нужно собирать заметки и назначаем клавиши вызова.
 
     #+begin_src emacs-lisp
-      (setq org-agenda-files (list n-org-inbox n-org-projects n-org-calendar))
+      (setq org-agenda-files (list n-org-inbox n-org-projects n-org-calendar n-org-daily))
     #+end_src
 
     #+begin_src emacs-lisp
