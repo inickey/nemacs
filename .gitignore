@@ -3,3 +3,6 @@
 /straight/
 /transient/
 /backups/
+/.cache/
+/auto-save-list/
+/eshell/
