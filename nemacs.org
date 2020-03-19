@@ -194,6 +194,32 @@
      (use-package diminish
        :ensure    t)
    #+end_src
+
+** =all-the-icons= для отображения иконок
+
+   Наводит красоты в дашборде, treemacs и т. д.
+
+   #+begin_src emacs-lisp
+     (use-package all-the-icons
+       :ensure    t)
+   #+end_src
+   
+** =Dashboard= в качестве стартового экрана
+
+   Полезно, чтобы утром быстро войти в курс дела, что делал вчера.
+
+   #+begin_src emacs-lisp
+     (use-package dashboard
+       :ensure    t
+       :config
+       (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))
+             dashboard-startup-banner (f-join n-nemacs-dir "nemacs.png")
+             dashboard-center-content t
+             dashboard-set-init-info nil
+             dashboard-set-heading-icons t
+             dashboard-set-file-icons t)
+       (dashboard-setup-startup-hook))
+   #+end_src
   
 * Рабочий процесс
 
