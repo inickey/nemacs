@@ -6,3 +6,5 @@
 /.cache/
 /auto-save-list/
 /eshell/
+/custom.el
+/recentf
